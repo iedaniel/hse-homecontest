@@ -5,7 +5,7 @@ using namespace std;
 struct Node_ {
     int val;
     Node_ * next;
-    Node_ (int val = 0) : val(val), next(nullptr) {};
+    explicit Node_ (int val) : val(val), next(nullptr) {};
 };
 typedef Node_ * Node;
 
@@ -38,25 +38,56 @@ Node Sort(Node a) {
     return Merge(Sort(a), Sort(b));
 }
 
-int main() {
-    int n;
-    cin >> n;
-    Node a = nullptr;
-    for (int i = 0; i < n; ++i) {
-        int x;
-        cin >> x;
-        Node b = new Node_(x);
+class List {
+public:
+    List(Node _a): a(_a) {}
+
+    void push(int val) {
+        Node b = new Node_(val);
         b->next = a;
         a = b;
     }
 
-    a = Sort(a);
-    while (a != nullptr) {
-        cout << a->val << ' ';
+    void pop() {
         Node b = a->next;
         delete a;
         a = b;
     }
 
+    void sort() {
+        a = Sort(a);
+    }
+
+    void print() {
+        Node b = a;
+        while (b != nullptr) {
+            cout << b->val << ' ';
+            b = b->next;
+        }
+    }
+
+    ~List() {
+        while (a != nullptr) {
+            pop();
+        }
+    }
+private:
+    Node a;
+};
+
+int main() {
+    int n;
+    cin >> n;
+
+    List a(nullptr);
+    for (int i = 0; i < n; ++i) {
+        int x;
+        cin >> x;
+        a.push(x);
+    }
+
+    a.sort();
+
+    a.print();
     return 0;
 }
